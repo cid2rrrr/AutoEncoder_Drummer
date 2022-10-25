@@ -1,3 +1,6 @@
 
 *.wav
 *.zip
+*.tar
+*.bz2
+LOOP/.DS_Store
