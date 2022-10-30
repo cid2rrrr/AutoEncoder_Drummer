@@ -1,7 +1,7 @@
 import os
 
 import numpy as np
-
+import tensorflow as tf
 from autoencoder import VAE
 
 
@@ -9,7 +9,7 @@ LEARNING_RATE = 0.0005
 BATCH_SIZE = 64
 EPOCHS = 150
 
-SPECTROGRAMS_PATH = "/home/valerio/datasets/fsdd/spectrograms/"
+SPECTROGRAMS_PATH = "./datasets/fsdd/spectrograms/"
 
 
 def load_fsdd(spectrograms_path):
@@ -40,5 +40,7 @@ def train(x_train, learning_rate, batch_size, epochs):
 
 if __name__ == "__main__":
     x_train = load_fsdd(SPECTROGRAMS_PATH)
-    autoencoder = train(x_train, LEARNING_RATE, BATCH_SIZE, EPOCHS)
+    with tf.device('/gpu:0'):
+        autoencoder = train(x_train, LEARNING_RATE, BATCH_SIZE, EPOCHS)
     autoencoder.save("model")
+    # print(x_train.shape)
