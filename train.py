@@ -9,7 +9,7 @@ LEARNING_RATE = 0.0005
 BATCH_SIZE = 64
 EPOCHS = 150
 
-SPECTROGRAMS_PATH = "./datasets/fsdd/spectrograms/"
+SPECTROGRAMS_PATH = "/home/valerio/datasets/fsdd/spectrograms/"
 
 
 def load_fsdd(spectrograms_path):
