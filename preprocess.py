@@ -17,19 +17,19 @@ import numpy as np
 class Loader:
     """Loader is responsible for loading an audio file."""
 
-    def __init__(self, sample_rate, duration, mono):
+    def __init__(self, sample_rate, mono): # duration, mono):
         self.sample_rate = sample_rate
-        self.duration = duration
+        # self.duration = duration
         self.mono = mono
 
     def load(self, file_path):
         signal = librosa.load(file_path,
                               sr=self.sample_rate,
-                              duration=self.duration,
+                            #   duration=self.duration,
                               mono=self.mono)[0]
         return signal
 
-
+'''
 class Padder:
     """Padder is responsible to apply padding to an array."""
 
@@ -47,7 +47,7 @@ class Padder:
                               (0, num_missing_items),
                               mode=self.mode)
         return padded_array
-
+'''
 
 class LogSpectrogramExtractor:
     """LogSpectrogramExtractor extracts log spectrograms (in dB) from a
@@ -126,7 +126,7 @@ class PreprocessingPipeline:
     """
 
     def __init__(self):
-        self.padder = None
+        # self.padder = None
         self.extractor = None
         self.normaliser = None
         self.saver = None
@@ -153,22 +153,22 @@ class PreprocessingPipeline:
 
     def _process_file(self, file_path):
         signal = self.loader.load(file_path)
-        if self._is_padding_necessary(signal):
-            signal = self._apply_padding(signal)
+        # if self._is_padding_necessary(signal):
+        #     signal = self._apply_padding(signal)
         feature = self.extractor.extract(signal)
         norm_feature = self.normaliser.normalise(feature)
         save_path = self.saver.save_feature(norm_feature, file_path)
         self._store_min_max_value(save_path, feature.min(), feature.max())
 
-    def _is_padding_necessary(self, signal):
-        if len(signal) < self._num_expected_samples:
-            return True
-        return False
+    # def _is_padding_necessary(self, signal):
+    #     if len(signal) < self._num_expected_samples:
+    #         return True
+    #     return False
 
-    def _apply_padding(self, signal):
-        num_missing_samples = self._num_expected_samples - len(signal)
-        padded_signal = self.padder.right_pad(signal, num_missing_samples)
-        return padded_signal
+    # def _apply_padding(self, signal):
+    #     num_missing_samples = self._num_expected_samples - len(signal)
+    #     padded_signal = self.padder.right_pad(signal, num_missing_samples)
+    #     return padded_signal
 
     def _store_min_max_value(self, save_path, min_val, max_val):
         self.min_max_values[save_path] = {
@@ -179,7 +179,7 @@ class PreprocessingPipeline:
 if __name__ == "__main__":
     FRAME_SIZE = 512
     HOP_LENGTH = 256
-    DURATION = 0.74  # in seconds
+    # DURATION = 0.74  # in seconds
     SAMPLE_RATE = 22050
     MONO = True
 
@@ -188,15 +188,15 @@ if __name__ == "__main__":
     FILES_DIR = "./datasets/fsdd/audio/"
 
     # instantiate all objects
-    loader = Loader(SAMPLE_RATE, DURATION, MONO)
-    padder = Padder()
+    loader = Loader(SAMPLE_RATE, MONO) # DURATION, MONO)
+    # padder = Padder()
     log_spectrogram_extractor = LogSpectrogramExtractor(FRAME_SIZE, HOP_LENGTH)
     min_max_normaliser = MinMaxNormaliser(0, 1)
     saver = Saver(SPECTROGRAMS_SAVE_DIR, MIN_MAX_VALUES_SAVE_DIR)
 
     preprocessing_pipeline = PreprocessingPipeline()
     preprocessing_pipeline.loader = loader
-    preprocessing_pipeline.padder = padder
+    # preprocessing_pipeline.padder = padder
     preprocessing_pipeline.extractor = log_spectrogram_extractor
     preprocessing_pipeline.normaliser = min_max_normaliser
     preprocessing_pipeline.saver = saver
