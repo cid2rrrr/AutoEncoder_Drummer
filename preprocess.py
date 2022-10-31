@@ -132,7 +132,7 @@ class PreprocessingPipeline:
         self.saver = None
         self.min_max_values = {}
         self._loader = None
-        self._num_expected_samples = None
+        # self._num_expected_samples = None
 
     @property
     def loader(self):
@@ -141,7 +141,7 @@ class PreprocessingPipeline:
     @loader.setter
     def loader(self, loader):
         self._loader = loader
-        self._num_expected_samples = int(loader.sample_rate * loader.duration)
+        # self._num_expected_samples = int(loader.sample_rate * loader.duration)
 
     def process(self, audio_files_dir):
         for root, _, files in os.walk(audio_files_dir):
