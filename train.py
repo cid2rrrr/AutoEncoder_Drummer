@@ -7,7 +7,7 @@ from autoencoder import VAE
 
 LEARNING_RATE = 0.0005
 BATCH_SIZE = 8
-EPOCHS = 800
+EPOCHS = 400
 
 SPECTROGRAMS_PATH = "./datasets/fsdd/spectrograms/"
 
@@ -31,10 +31,10 @@ def load_fsdd(spectrograms_path):
 def train(x_train, learning_rate, batch_size, epochs):
     autoencoder = VAE(
         input_shape=(256, 256, 1), # (256, 64, 1),
-        conv_filters=(512, 256, 128, 64, 32),
+        conv_filters=(256, 128, 64, 32, 16),
         conv_kernels=(3, 3, 3, 3, 3),
         conv_strides=(2, 2, 2, 2, (2, 1)),
-        latent_space_dim=128
+        latent_space_dim=64
     )
     autoencoder.summary()
     autoencoder.compile(learning_rate)

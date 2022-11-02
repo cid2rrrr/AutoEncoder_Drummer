@@ -1,6 +1,7 @@
 import os
 import pickle
 import librosa
+import random
 
 import numpy as np
 import soundfile as sf
@@ -61,7 +62,7 @@ if __name__ == "__main__":
     
     decoder = vae.decoder
     
-    j = decoder.predict(np.random.randn(1,128))
+    j = decoder.predict(np.random.randn(1,64))
     
     print(j.shape)
     
@@ -88,7 +89,7 @@ if __name__ == "__main__":
     signals, _ = sound_generator.generate(sampled_specs,
                                           sampled_min_max_values)
     """
-    d = min_max_values['./datasets/fsdd/spectrograms/01.wav.npy']
+    d = min_max_values[random.choice(list(min_max_values.keys()))]
     # convert spectrogram samples to audio
     # original_signals = sound_generator.convert_spectrograms_to_audio(
     #     j, d)

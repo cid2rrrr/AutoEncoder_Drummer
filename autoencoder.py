@@ -453,11 +453,11 @@ class VAE:
 
 if __name__ == "__main__":
     autoencoder = VAE(
-        input_shape=(256, 470, 1),
-        conv_filters=(32, 64, 64, 64),
-        conv_kernels=(3, 3, 3, 3),
-        conv_strides=(1, 2, 2, 1),
-        latent_space_dim=2
+        input_shape=(256, 256, 1),
+        conv_filters=(256, 128, 64, 32, 16),
+        conv_kernels=(3, 3, 3, 3, 3),
+        conv_strides=(2, 2, 2, 2, (2,1)),
+        latent_space_dim=64
     )
     autoencoder.summary()
 
