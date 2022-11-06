@@ -10,6 +10,7 @@ from tensorflow.keras import backend as K
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.losses import MeanSquaredError
 
+import params
 
 
 tf.compat.v1.disable_eager_execution()
@@ -150,7 +151,7 @@ class VAE:
         return Input(shape=self.latent_space_dim, name="decoder_input")
 
     def _add_dense_layer(self, decoder_input):
-        num_neurons = np.prod(self._shape_before_bottleneck) # [1, 2, 4] -> 8
+        num_neurons = np.prod(self._shape_before_bottleneck)
         dense_layer = Dense(num_neurons, name="decoder_dense")(decoder_input)
         return dense_layer
 
@@ -158,8 +159,6 @@ class VAE:
         return Reshape(self._shape_before_bottleneck)(dense_layer)
 
     def _add_conv_transpose_layers(self, x):
-        # loop through all the conv layers in reverse order and stop at the
-        # first layer
         for layer_index in reversed(range(1, self._num_conv_layers)):
             x = self._add_conv_transpose_layer(layer_index, x)
         return x
@@ -241,11 +240,11 @@ class VAE:
 
 if __name__ == "__main__":
     autoencoder = VAE(
-        input_shape=(256, 256, 1),
-        conv_filters=(256, 128, 64, 32, 16),
-        conv_kernels=(3, 3, 3, 3, 3),
-        conv_strides=(2, 2, 2, 2, (2,1)),
-        latent_space_dim=64
+	input_shape=params.input_shape,
+        conv_filters=params.conv_filters,
+        conv_kernels=params.conv_kernels,
+        conv_strides=params.conv_strides,
+        latent_space_dim=params.latent_space_dim
     )
     autoencoder.summary()
 

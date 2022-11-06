@@ -5,7 +5,6 @@ import soundfile as sf
 
 from soundgenerator import SoundGenerator
 from autoencoder import VAE
-from train import SPECTROGRAMS_PATH
 from preprocess import MinMaxNormaliser
 
 import params

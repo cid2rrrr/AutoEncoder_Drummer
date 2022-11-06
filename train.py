@@ -26,11 +26,11 @@ def load_spec(spectrograms_path):
 
 def train(x_train, learning_rate, batch_size, epochs):
     autoencoder = VAE(
-        input_shape=(256, 256, 1),
-        conv_filters=(256, 128, 64, 32, 16),
-        conv_kernels=(3, 3, 3, 3, 3),
-        conv_strides=(2, 2, 2, 2, (2, 1)),
-        latent_space_dim=64
+        input_shape=params.input_shape,
+        conv_filters=params.conv_filters,
+        conv_kernels=params.conv_kernels,
+        conv_strides=params.conv_strides,
+        latent_space_dim=params.latent_space_dim
     )
     autoencoder.summary()
     autoencoder.compile(learning_rate)
