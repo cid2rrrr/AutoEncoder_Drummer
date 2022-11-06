@@ -4,12 +4,8 @@ import numpy as np
 import tensorflow as tf
 from autoencoder import VAE
 
+import params
 
-LEARNING_RATE = 0.0005
-BATCH_SIZE = 8
-EPOCHS = 400
-
-SPECTROGRAMS_PATH = "./datasets/spectrograms/"
 
 
 def load_spec(spectrograms_path):
@@ -30,7 +26,7 @@ def load_spec(spectrograms_path):
 
 def train(x_train, learning_rate, batch_size, epochs):
     autoencoder = VAE(
-        input_shape=(256, 256, 1), # (256, 64, 1),
+        input_shape=(256, 256, 1),
         conv_filters=(256, 128, 64, 32, 16),
         conv_kernels=(3, 3, 3, 3, 3),
         conv_strides=(2, 2, 2, 2, (2, 1)),
@@ -43,8 +39,8 @@ def train(x_train, learning_rate, batch_size, epochs):
 
 
 if __name__ == "__main__":
-    x_train = load_spec(SPECTROGRAMS_PATH)
+    x_train = load_spec(params.SPECTROGRAMS_PATH)
     
     with tf.device('/gpu:0'):
-        autoencoder = train(x_train, LEARNING_RATE, BATCH_SIZE, EPOCHS)
+        autoencoder = train(x_train, params.LEARNING_RATE, params.BATCH_SIZE, params.EPOCHS)
     autoencoder.save("model")

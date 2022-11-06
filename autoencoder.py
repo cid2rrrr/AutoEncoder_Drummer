@@ -1,5 +1,7 @@
-import os
-import pickle
+import os, pickle
+
+import numpy as np
+import tensorflow as tf
 
 from tensorflow.keras import Model
 from tensorflow.keras.layers import Input, Conv2D, ReLU, BatchNormalization, \
@@ -7,8 +9,7 @@ from tensorflow.keras.layers import Input, Conv2D, ReLU, BatchNormalization, \
 from tensorflow.keras import backend as K
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.losses import MeanSquaredError
-import numpy as np
-import tensorflow as tf
+
 
 
 tf.compat.v1.disable_eager_execution()
@@ -41,11 +42,11 @@ class VAE:
                  conv_kernels,
                  conv_strides,
                  latent_space_dim):
-        self.input_shape = input_shape # [28, 28, 1]
-        self.conv_filters = conv_filters # [2, 4, 8]
-        self.conv_kernels = conv_kernels # [3, 5, 3]
-        self.conv_strides = conv_strides # [1, 2, 2]
-        self.latent_space_dim = latent_space_dim # 2
+        self.input_shape = input_shape
+        self.conv_filters = conv_filters
+        self.conv_kernels = conv_kernels
+        self.conv_strides = conv_strides
+        self.latent_space_dim = latent_space_dim
         self.reconstruction_loss_weight = 1000000
 
         self.encoder = None

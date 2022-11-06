@@ -1,7 +1,4 @@
-import os
-import pickle
-import librosa
-import random
+import os, pickle, librosa, random
 
 import numpy as np
 import soundfile as sf
@@ -11,38 +8,29 @@ from autoencoder import VAE
 from train import SPECTROGRAMS_PATH
 from preprocess import MinMaxNormaliser
 
-HOP_LENGTH = 470
-SAVE_DIR= "./generated/"
-MIN_MAX_VALUES_PATH = "./datasets/min_max_values.pkl"
+import params
+
+#HOP_LENGTH = 470
+#SAVE_DIR= "./generated/"
+#MIN_MAX_VALUES_PATH = "./datasets/min_max_values.pkl"
 
 
 def load_spec(spectrograms_path):
     x_train = []
     file_paths = []
+
     for root, _, file_names in os.walk(spectrograms_path):
         for file_name in file_names:
             file_path = os.path.join(root, file_name)
-            spectrogram = np.load(file_path) # (n_bins, n_frames, 1)
+            spectrogram = np.load(file_path)
             x_train.append(spectrogram)
             file_paths.append(file_path)
+
     x_train = np.dstack(x_train)
     x_train = np.rollaxis(x_train, axis=-1)
-    x_train = x_train[..., np.newaxis] # -> (3000, 256, 64, 1)
+    x_train = x_train[..., np.newaxis]
+
     return x_train, file_paths
-
-
-def select_spectrograms(spectrograms,
-                        file_paths,
-                        min_max_values,
-                        num_spectrograms=2):
-    sampled_indexes = np.random.choice(range(len(spectrograms)), num_spectrograms)
-    sampled_spectrogrmas = spectrograms[sampled_indexes]
-    file_paths = [file_paths[index] for index in sampled_indexes]
-    sampled_min_max_values = [min_max_values[file_path] for file_path in
-                           file_paths]
-    print(file_paths)
-    print(sampled_min_max_values)
-    return sampled_spectrogrmas, sampled_min_max_values
 
 
 def save_signals(signals, save_dir, sample_rate=22050):
@@ -55,20 +43,14 @@ if __name__ == "__main__":
     # initialise sound generator
     vae = VAE.load("model")
     
-    
     decoder = vae.decoder
     
-    j = decoder.predict(np.random.randn(1,64))
+    j = decoder.predict(np.random.randn(1,64)) 
     
-    print(j.shape)
-    
-    
-    
-    
-    sound_generator = SoundGenerator(vae, HOP_LENGTH)
+    sound_generator = SoundGenerator(vae, params.HOP_LENGTH)
 
     # load spectrograms + min max values
-    with open(MIN_MAX_VALUES_PATH, "rb") as f:
+    with open(params.MIN_MAX_VALUES_PATH+'min_max_values.pkl', "rb") as f:
         min_max_values = pickle.load(f)
 
     
@@ -87,13 +69,13 @@ if __name__ == "__main__":
     spec = librosa.db_to_amplitude(denorm_log_spec)
     
     # apply Griffin-Lim
-    signal = librosa.istft(spec, hop_length=HOP_LENGTH)
+    signal = librosa.istft(spec, hop_length=params.HOP_LENGTH)
     
     # append signal to "signals"
     signals.append(signal)
         
 
-    save_signals(signals, SAVE_DIR)
+    save_signals(signals, params.SAVE_DIR)
 
     
 
