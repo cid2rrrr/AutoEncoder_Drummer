@@ -9,22 +9,22 @@ LEARNING_RATE = 0.0005
 BATCH_SIZE = 8
 EPOCHS = 400
 
-SPECTROGRAMS_PATH = "./datasets/fsdd/spectrograms/"
+SPECTROGRAMS_PATH = "./datasets/spectrograms/"
 
 
-def load_fsdd(spectrograms_path):
+def load_spec(spectrograms_path):
     x_train = []
     for root, _, file_names in os.walk(spectrograms_path):
         for file_name in file_names:
             file_path = os.path.join(root, file_name)
-            spectrogram = np.load(file_path) # (n_bins, n_frames, 1)
+            spectrogram = np.load(file_path) 
             if spectrogram.shape[1] == 256:
                 x_train.append(spectrogram)
-            # print(x_train.__len__())
-    # x_train = np.array(x_train)
+
     x_train = np.dstack(x_train)
     x_train = np.rollaxis(x_train, axis=-1)
-    x_train = x_train[..., np.newaxis] # -> (3000, 256, 64, 1)
+    x_train = x_train[..., np.newaxis]
+    
     return x_train
 
 
@@ -43,8 +43,8 @@ def train(x_train, learning_rate, batch_size, epochs):
 
 
 if __name__ == "__main__":
-    x_train = load_fsdd(SPECTROGRAMS_PATH)
-    # print(x_train.shape)
+    x_train = load_spec(SPECTROGRAMS_PATH)
+    
     with tf.device('/gpu:0'):
         autoencoder = train(x_train, LEARNING_RATE, BATCH_SIZE, EPOCHS)
     autoencoder.save("model")

@@ -11,14 +11,12 @@ from autoencoder import VAE
 from train import SPECTROGRAMS_PATH
 from preprocess import MinMaxNormaliser
 
-# HOP_LENGTH = 256
 HOP_LENGTH = 470
-SAVE_DIR_ORIGINAL = "./samples/original/"
-SAVE_DIR_GENERATED = "./samples/generated/"
-MIN_MAX_VALUES_PATH = "./datasets/fsdd/min_max_values.pkl"
+SAVE_DIR= "./generated/"
+MIN_MAX_VALUES_PATH = "./datasets/min_max_values.pkl"
 
 
-def load_fsdd(spectrograms_path):
+def load_spec(spectrograms_path):
     x_train = []
     file_paths = []
     for root, _, file_names in os.walk(spectrograms_path):
@@ -27,10 +25,8 @@ def load_fsdd(spectrograms_path):
             spectrogram = np.load(file_path) # (n_bins, n_frames, 1)
             x_train.append(spectrogram)
             file_paths.append(file_path)
-    # x_train = np.array(x_train)
     x_train = np.dstack(x_train)
     x_train = np.rollaxis(x_train, axis=-1)
-    # x_train = x_train[..., np.newaxis] # -> (3000, 256, 64, 1)
     x_train = x_train[..., np.newaxis] # -> (3000, 256, 64, 1)
     return x_train, file_paths
 
@@ -75,51 +71,29 @@ if __name__ == "__main__":
     with open(MIN_MAX_VALUES_PATH, "rb") as f:
         min_max_values = pickle.load(f)
 
-    # specs, file_paths = load_fsdd(SPECTROGRAMS_PATH)
-
     
-    """
-    # sample spectrograms + min max values
-    sampled_specs, sampled_min_max_values = select_spectrograms(specs,
-                                                                file_paths,
-                                                                min_max_values,
-                                                                5)
-    
-    # generate audio for sampled spectrograms
-    signals, _ = sound_generator.generate(sampled_specs,
-                                          sampled_min_max_values)
-    """
     d = min_max_values[random.choice(list(min_max_values.keys()))]
-    # convert spectrogram samples to audio
-    # original_signals = sound_generator.convert_spectrograms_to_audio(
-    #     j, d)
 
     _min_max_normaliser = MinMaxNormaliser(0,1)
     
     signals = []
-    # for spectrogram, min_max_value in zip(j.reshape((256,256)), min_max_values):
-        # print(spectrogram)
-        # print(min_max_value)
-        
-        # reshape the log spectrogram
-    log_spectrogram = j.reshape((256,256))#spectrogram[:, :, 0]
-    # apply denormalisation
+
+    log_spectrogram = j.reshape((256,256))
+
     denorm_log_spec = _min_max_normaliser.denormalise(
-        log_spectrogram, d['min'], d['max']) #min_max_value["min"], min_max_value["max"])
+        log_spectrogram, d['min'], d['max']) 
+        
     # log spectrogram -> spectrogram
     spec = librosa.db_to_amplitude(denorm_log_spec)
+    
     # apply Griffin-Lim
     signal = librosa.istft(spec, hop_length=HOP_LENGTH)
+    
     # append signal to "signals"
     signals.append(signal)
         
 
-
-
-
-    # save audio signals
-    # save_signals(j, SAVE_DIR_GENERATED)
-    save_signals(signals, SAVE_DIR_ORIGINAL)
+    save_signals(signals, SAVE_DIR)
 
     
 

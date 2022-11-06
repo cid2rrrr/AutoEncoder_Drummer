@@ -4,10 +4,6 @@ from preprocess import MinMaxNormaliser
 
 
 class SoundGenerator:
-    """SoundGenerator is responsible for generating audios from
-    spectrograms.
-    """
-
     def __init__(self, vae, hop_length):
         self.vae = vae
         self.hop_length = hop_length
