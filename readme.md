@@ -1,16 +1,16 @@
 # VAE Drum Loop Generator
 
-A desired image can be generated from random nosise. Which means that a Mel-Spectrogram from the sound can also be generated.  
+The desired image can be generated from random noise. This means that a Mel-Spectrogram from the sound can also be generated.  
 
-There have been some studies on voice generation. then what about percussive sound?
+There have been some studies on voice generation. then what about percussive sounds?  
 
 </br></br>
 
 ## Dataset
 ---
-Since there's no drum dataset at one fixed bpm, **600+** two-bar drum loops were extracted from 70's 80's Funk/Soul music (primarily sampled in hip-hop) and fixed at 88 bpm using **StudioOne** DAW.  
+Since there's no drum dataset at one fixed bpm, **600+** two-bar drum loops were extracted from the '70s '80s Funk/Soul music (primarily sampled in hip-hop) and fixed at 88 bpm using **StudioOne** DAW.  
 
-bpm is fixed at 88 due to a mistake, if you collect new dataset, I recommend setting the bpm to 90 or finding a bpm that can hold `hop_length` to a power of 2.  
+bpm is fixed at 88 due to a mistake, if you collect a new dataset, I recommend setting the bpm to 90 or finding a bpm that can hold `hop_length` to a power of 2.  
 
 Due to copyright issues, I can't share my dataset.
 Additional modifications are needed, but [E-GMD][gmd_lnk] dataset from **Magenta** would be a good enough substitute.  
@@ -67,7 +67,7 @@ https://user-images.githubusercontent.com/81271890/200157432-9b2e88e0-f2de-47bd-
 ## Detail
 ---
 ### Preprocess
-Default Input shape is **(256,256)**; therefore, the value of n_fft and hop_length are changed to 512 and 470.
+The default Input shape is **(256,256)**; therefore, the value of n_fft and hop_length are changed to 512 and 470.
 
 The MAX and min values of the spectrogram can not be easily specified. Since the **Griffin-Lim** algorithm is used as a method of substituting spectrograms into waveforms, the MAX and min values of the spectrogram are stored in dict form before normalizing them.
 
@@ -92,5 +92,5 @@ Due to lack of data, lack of epochs, losses from spectrogram to audio, etc., dig
 
 However, you can feel the beat, rhythm, and groove finely among the messy noise.
 
-If sufficient training is achieved w/ much larger amounths of data, and using better way to substitute the spectrogram to audio, drum loops can be generated that can be used as percussive sources even if can not be completely replaced the original loops.
+If sufficient training is achieved w/ much larger amounts of data, and using a better way to substitute the spectrogram to audio, drum loops can be generated that can be used as percussive sources even if can not be completely replaced with the original loops.
 
